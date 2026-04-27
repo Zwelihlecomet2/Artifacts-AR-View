@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuttingEdge</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://kit.fontawesome.com/f9b4791500.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <video autoplay 
+          playsinline 
+          id="camera">
+    </video>
+    <!-- Entire Model Box -->
+    <div class="model-box">
+      <model-viewer id="modelViewer" 
+                    src="office_chair.glb"
+                    alt="Office Chair"
+                    ar
+                    ar-placement="floor"
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    interaction-prompt="none"
+                    auto-rotate>
+      </model-viewer>
+    </div>
+
+    <!-- header with navigations -->
+     <header id="header">
+        <nav>
+          <!-- Scale -->
+          <label for="model-scale" class="scale-box">
+            Scale:
+            <input  type="range" id="model-scale" min="0.1" max="3" step="0.01" value="1">
+          </label>
+        </nav>
+        <div class="group">
+          <aside id="info" ><i class="fa-solid fa-info"></i></aside>
+        <aside id="below" ><i class="fa-solid fa-eye"></i></aside>
+        </div>
+     </header>
+     <footer class="cover">
+      <button id="visit-site-btn" class="btn" onclick="window.location.href='https://giwml-105-247-226-250.a.free.pinggy.link/unified_login.php'">
+        <i class="fa-solid fa-eye"></i>
+       
+      </button>
+      <button id="add-to-cart-btn" class="btn">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <!-- Add to Cart -->
+      </button>
+      <button slot="ar-button" class="btn" style="visibility: hidden;">AR</button>
+     </footer>
+
+     <!-- Info modal -->
+      <div id="info-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn " id="close-btn">&times;</span>
+          <h2>Product Information</h2>
+          <p>This is a high-quality office chair designed for comfort and durability.</p>
+          <ul>
+            <li>Company: Lewis</li>
+            <li>Status: Available</li>
+            <li>Price: R20000 inc tax</li>
+            <li>Size: 40cm</li>
+          </ul>
+          <button class="modal-pay">Buy</button>
+        </div>
+      </div>
+    
+
+    <script src="app.js"></script>
+    <script>
+      a = document.getElementById("below");
+      b = document.querySelector(".cover");
+
+      a.addEventListener("click", function() {
+        b.classList.toggle("uncover");
+      });
+
+      // Info Icon Alert
+      const infoBox = document.getElementById('info');
+      const infoModal = document.getElementById('info-modal');
+      const closeBtn = document.getElementById('close-btn');
+
+      infoBox.addEventListener('click', () => { 
+        infoModal.style.display = 'flex';
+        console.log("Info modal opened");
+      });
+      closeBtn.addEventListener('click', () => { infoModal.style.display = 'none'; });
+
+      //     size
+      const modelViewer = document.getElementById('modelViewer');
+        const scaleSlider = document.getElementById('model-scale');
+        scaleSlider.addEventListener('input', () => {
+          const scale = scaleSlider.value;
+          modelViewer.scale = `${scale} ${scale} ${scale}`;
+        });
+    </script>
+</body>
+</html>
