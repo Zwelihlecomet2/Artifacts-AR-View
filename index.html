@@ -3,21 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carnotaurus</title>
+    <title>AugmentIT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script src="https://kit.fontawesome.com/f9b4791500.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="shortcut icon" href="./assets/augmentIT-logo.jpeg" type="image/x-icon">
 </head>
 <body>
 
-    <video autoplay 
-          playsinline 
+    <canvas id="screenshot-canvas" style="display: none;"></canvas>
+
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading 3D Model...</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-text" id="progress-text">0%</span>
+      </div>
+    </div>
+
+    <video autoplay
+          playsinline
           id="camera">
     </video>
-    <!-- Entire Model Box -->
+
+    <div class="ar-overlay">
+      <div class="brand-badge">
+        <i class="fa-solid fa-cube"></i>
+        <span>CuttingEdgeTech</span>
+      </div>
+      <div class="gesture-hints" id="gesture-hints">
+        <div class="hint-item">
+          <i class="fa-solid fa-hand"></i>
+          <span>Drag to rotate</span>
+        </div>
+        <div class="hint-item">
+          <i class="fa-solid fa-up-down-left-right"></i>
+          <span>Pinch to zoom</span>
+        </div>
+      </div>
+    </div>
+
     <div class="model-box">
-      <model-viewer id="modelViewer" 
+      <model-viewer id="modelViewer"
                     src="purple_carnotaurus.glb"
                     alt="purple_carnotaurus"
                     ar
@@ -26,40 +60,137 @@
                     camera-controls
                     interaction-prompt="none"
                     auto-rotate>
+        <div class="ar-prompt" slot="ar-prompt">
+          <div class="ar-prompt-content">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <p>Tap to place in your space</p>
+          </div>
+        </div>
       </model-viewer>
     </div>
 
+    <header id="header">
+        <nav>
+          <div class="model-selector">
+            <label class="selector-label">Model</label>
+            <div class="model-selector-inner">
+              <select id="model-select" class="model-dropdown">
+          <option value="purple_carnotaurus.glb">purple_carnotaurus</option>
+          <option value="3d_sofa_rendering.glb">Modern Sofa</option>
+              </select>
+            </div>
+          </div>
+          <label for="model-scale" class="scale-box">
+            <span class="scale-label">Scale</span>
+            <div class="scale-control">
+              <span class="scale-value" id="scale-value">0.55x</span>
+              <input type="range" id="model-scale" min="0.1" max="3" step="0.01" value="0.5">
+            </div>
+          </label>
+        </nav>
+        <div class="group">
+          <button class="icon-btn" id="fullscreen-btn" aria-label="Fullscreen">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+          <button class="icon-btn" id="gallery-btn" aria-label="Screenshot Gallery">
+            <i class="fa-solid fa-images"></i>
+          </button>
+          <button class="icon-btn" id="screenshot-btn" aria-label="Take Screenshot">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+          <button class="icon-btn" id="info" aria-label="Product Information">
+            <i class="fa-solid fa-info"></i>
+          </button>
+          <button class="icon-btn" id="below" aria-label="Toggle Controls">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+     </header>
      <footer class="cover">
+      <div class="action-group">
+        <button id="screenshot-mobile-btn" class="btn btn-tertiary" aria-label="Capture">
+          <i class="fa-solid fa-camera"></i>
+          <span>Capture</span>
+        </button>
+        <a href="https://bradlow.netlify.app/" target="_blank" id="visit-site-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-eye"></i>
+          <span>View Details</span>
+        </a>
+        <a href="https://bradlow.netlify.app/" target="_blank" id="add-to-cart-btn" class="btn btn-primary">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Add to Cart</span>
+        </a>
+      </div>
       <button slot="ar-button" class="btn" style="visibility: hidden;">AR</button>
      </footer>
+
+     <div id="info-modal" class="modal">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+          <button class="close-btn" id="close-btn" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="modal-header">
+            <h2 id="product-name">Product Information</h2>
+            <span class="badge badge-success">Available</span>
+          </div>
+          <div class="modal-body">
+            <p class="product-description" id="product-description">This is a high-quality office chair designed for comfort and durability.</p>
+            <div class="product-details">
+              <div class="detail-item">
+                <span class="detail-label">Company</span>
+                <span class="detail-value">Bradlows</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">Available</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Price</span>
+                <span class="detail-value detail-price" id="product-price">R20,000</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Size</span>
+                <span class="detail-value" id="product-size">40cm</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="modal-pay">
+              <i class="fa-solid fa-shopping-bag"></i>
+              <a id="purchase-now" href="https://bradlow.netlify.app/" target="_blank">Purchase Now</a>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="gallery-modal" class="modal">
+        <div class="modal-overlay" id="gallery-overlay"></div>
+        <div class="modal-content gallery-content">
+          <button class="close-btn" id="gallery-close-btn" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="modal-header">
+            <h2>Screenshot Gallery</h2>
+            <button class="clear-gallery-btn" id="clear-gallery-btn">
+              <i class="fa-solid fa-trash"></i>
+              Clear All
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="gallery-grid" id="gallery-grid">
+              <div class="empty-gallery">
+                <i class="fa-solid fa-camera"></i>
+                <p>No screenshots yet</p>
+                <span>Take your first screenshot to see it here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     
+
     <script src="app.js"></script>
-    <script>
-      a = document.getElementById("below");
-      b = document.querySelector(".cover");
-
-      a.addEventListener("click", function() {
-        b.classList.toggle("uncover");
-      });
-
-      // Info Icon Alert
-      const infoBox = document.getElementById('info');
-      const infoModal = document.getElementById('info-modal');
-      const closeBtn = document.getElementById('close-btn');
-
-      infoBox.addEventListener('click', () => { 
-        infoModal.style.display = 'flex';
-        console.log("Info modal opened");
-      });
-      closeBtn.addEventListener('click', () => { infoModal.style.display = 'none'; });
-
-      //     size
-      const modelViewer = document.getElementById('modelViewer');
-        const scaleSlider = document.getElementById('model-scale');
-        scaleSlider.addEventListener('input', () => {
-          const scale = scaleSlider.value;
-          modelViewer.scale = `${scale} ${scale} ${scale}`;
-        });
-    </script>
+    <script src="enhanced-features.js"></script>
 </body>
 </html>
