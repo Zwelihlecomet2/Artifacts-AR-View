@@ -20,7 +20,7 @@ const AppController = {
 
   // optional per-model metadata: friendly label, thumbnail (optional), default scale and camera orbit
   modelsMeta: {
-    'purple_carnotaurus.glb': { label: 'Premium Office Chair', scale: 1.0 },
+    'purple_carnotaurus.glb': { label: 'Premium Office Chair', scale: 100 },
     '3d_sofa_rendering.glb': { label: 'Modern Sofa', scale: 0.9 },
     'kitchen_table.glb': { label: 'Kitchen Table', scale: 1.2 },
     'gertie_2_seater_sofa_dufrene_moss_velvet.glb': { label: 'Gertie 2-Seater Sofa', scale: 0.85 },
